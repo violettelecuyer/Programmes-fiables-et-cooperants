@@ -1,0 +1,157 @@
+
+body {
+
+    font-family: 'Open Sans', sans-serif;
+    background-color: #d3e6f3;
+    color: #151057;
+    padding: 60px 50px; 
+    line-height: 1.8;
+}
+
+h1 {
+    color: #003366;
+    font-size: 25px;
+    font-family: "Open Sans", sans-serif;
+
+}
+
+h2 {
+    color: #003366;
+    font-size: 20px;
+    font-family: "Open Sans", sans-serif;
+    text-transform: uppercase;
+
+}
+
+h3 {
+    color: #003366;
+    font-size: 15px;
+    font-family: "Open Sans", sans-serif;
+}
+
+
+.haut {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: stretch;
+    margin-bottom: 40px;
+}
+
+.bas {
+    display:flex;
+    flex-direction: row;
+    gap: 40px ;
+    margin-bottom: 40px
+}
+
+.a_propos {
+    flex: 1;
+    background-color: lightblue;
+    padding: 40px;
+    border-radius: 30px;
+    margin-bottom: 30px;
+    margin-left: 30px;
+}
+
+.parcours {
+    background-color: lightblue;
+    border: 3px solid #151057;
+    padding: 40px;
+    border-radius: 30px;
+}
+
+.presentation {
+    display: flex;
+    height: 240px;
+    background-color: d3e6f3;
+    gap: 25px;
+    align-items: center;
+    padding: 40px;
+
+}
+
+.photo {
+    width: 160px;
+    height: 215px;
+    border-radius: 10px;
+    margin-right: 35px;
+    object-fit: cover;
+    border: 2px solid #151057;
+}
+
+.ecole {      
+    margin-bottom: 15px;   
+    font-weight: bold;
+    color: #003366;      
+    font-size: 1rem;
+}
+
+.coordonnees {
+    font-size: 0.9rem;     
+    line-height: 1.4;
+}
+
+.parcours {
+    display: flex 1;
+    background-color: lightblue;
+    border: 3px solid #151057;
+    padding: 40px;
+    margin-bottom: 40px;
+    border-radius: 30px;
+
+}
+
+.experiences {
+    display: flex 1;
+    border: 3px solid #151057;
+    background-color: lightblue;
+    padding: 40px;
+    margin-bottom: 40px;
+    border-radius: 30px;
+}
+
+.langues{
+    display: flex 1;
+    background-color: lightblue;
+    border: 3px solid #151057;
+    padding: 40px;
+    border-radius: 30px;
+}
+
+.interets{
+    display: flex 2;
+    background-color: lightblue;
+    border: 3px solid #151057;
+    padding: 40px;
+    border-radius: 30px;
+}
+
+.linkedin_bouton {
+    display: inline-flex;    
+    align-items: center;
+    margin-top: 12px;
+    padding: 6px 12px;       
+    
+    background-color: #84afc5; 
+    color: white;  
+    
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 4px;     
+    
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+
+.linkedin_bouton i {       
+    font-size: 1rem;
+}
+
+
+.linkedin_bouton:hover {
+    background-color: #75a9c3; 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
