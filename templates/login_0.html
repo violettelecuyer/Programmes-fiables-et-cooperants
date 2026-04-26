@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
+  <title>Chat</title>
   <style>
     html, body {
       margin: 0;
@@ -12,6 +12,27 @@
       align-items: center;
       justify-content: center;
     }
+    .panel {
+      width: 80vw;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid black;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        width: 100%;
+        text-align: center;
+        display: flex;
+    }
+    input, button {
+      padding: 8px;
+      font-size: 1rem;
+      margin: 5px;
+    }
 
     .wrapper {
       width: 80vw;
@@ -19,6 +40,16 @@
       display: flex;
       flex-direction: column;
       border: 1px solid black;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .buttons button {
+        margin: 0 10px;
     }
 
     #messages {
@@ -31,27 +62,80 @@
       display: flex;
     }
 
-    #user_name {
+    #name {
       width: 150px;
     }
 
-    #password {
+    #msg {
       flex: 1;
     }
 
-    input {
-      padding: 8px;
-      font-size: 1rem;
-    }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <div id="messages"></div>
-    <div class="controls">
-      <input id="user_name" placeholder="user name">
-      <input id="password" placeholder="password">
+  <div class="panel">
+    <h1>Login</h1>
+    <input id="name" placeholder="name">
+    <input id="password" placeholder="password">
+    <div class="buttons">
+        <button id="login">Login</button>
+        <button id="register">Register</button>
     </div>
+    <div id="error"></div>
+
+    </div>
+       
+ 
+    <!-- </script> -->
+
+
+
+
+
+
+    <div id="messages"></div>
   </div>
+
+  <script>
+    const nameInput = document.getElementById("name");
+    const passwordInput = document.getElementById("password");
+    const loginButton = document.getElementById("login");
+    const registerButton = document.getElementById("register");
+    const errorDiv = document.getElementById("error");
+    const msgInput = document.getElementById("msg");
+    async function submit(path) {
+        const name = nameInput.value;
+        const password = passwordInput.value;
+        if (!name || !password) {
+            errorDiv.textContent = "Name and password are required.";
+            return;
+           
+        }
+        const res = await fetch(path, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ name, password })
+        });
+        if (res.ok) {
+            window.location.href = "/chat";
+            return;
+        }
+
+        const data = await res.json();
+        errorDiv.textContent = data.detail;
+    }
+    loginButton.addEventListener("click", () => submit("/login"));
+    registerButton.addEventListener("click", () => submit("/register"));
+
+    const messagesDiv = document.getElementById("messages");
+   
+    passwordInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        submit("/login");
+      }
+    });
+
+  </script>
 </body>
 </html>
