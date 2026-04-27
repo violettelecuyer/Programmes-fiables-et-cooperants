@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat - {{ room_name }}</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrapper {
+      width: 80vw;
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid black;
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    .controls {
+      display: flex;
+    }
+
+    #msg {
+      flex: 1;
+    }
+
+    input {
+      padding: 8px;
+      font-size: 1rem;
+    }
+
+    .owner-box {
+      display: flex;
+      border-top: 1px solid #f0c040;
+      background: #fffbe6;
+    }
+
+    #allowed-user-name {
+      flex: 1;
+    }
+
+    #allow-user-button {
+      padding: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #allow-status {
+      padding: 4px 8px;
+      font-size: 0.9rem;
+      align-self: center;
+    }
+  </style>
+</head>
+<body>
+
+{% if allowed %}
+
+  <div class="wrapper">
+    <div class="header">Room: {{ room_name }} — Logged in as: {{ user_name }}</div>
+    <div id="messages"></div>
+    <div class="controls">
+      <input id="msg" placeholder="message (enter)">
+    </div>
+    {% if is_owner %}
+    <div class="owner-box">
+      <input id="allowed-user-name" placeholder="username to allow">
+      <button id="allow-user-button">Allow user</button>
+      <span id="allow-status"></span>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    const roomName = {{ room_name | tojson }};
+
+    const messagesDiv = document.getElementById("messages");
+    const msgInput = document.getElementById("msg");
+
+    let lastRendered = "";
+
+    function scrollBottom() {
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function render(msgs) {
+      const newRendered = msgs.map(m => "[" + m.name + "] " + m.message).join("<br>");
+      if (newRendered !== lastRendered) {
+        messagesDiv.innerHTML = newRendered;
+        lastRendered = newRendered;
+        scrollBottom();
+      }
+    }
+
+    async function poll() {
+      const res = await fetch(`/poll/${roomName}`, { credentials: "include" });
+      if (!res.ok) return;
+      const data = await res.json();
+      render(data.messages);
+    }
+
+    async function send() {
+      const message = msgInput.value;
+      if (!message) return;
+      await fetch(`/send/${roomName}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ message })
+      });
+      msgInput.value = "";
+      poll();
+    }
+
+    msgInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        send();
+      }
+    });
+
+    poll();
+    setInterval(poll, 1000);
+
+    {% if is_owner %}
+    document.getElementById("allow-user-button").addEventListener("click", async () => {
+      const nameInput = document.getElementById("allowed-user-name");
+      const statusSpan = document.getElementById("allow-status");
+      const name = nameInput.value.trim();
+      if (!name) return;
+
+      const res = await fetch(`/rooms/${roomName}/allow`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name })
+      });
+
+      if (res.ok) {
+        statusSpan.style.color = "green";
+        statusSpan.textContent = `✓ ${name} allowed`;
+        nameInput.value = "";
+      } else {
+        const data = await res.json();
+        statusSpan.style.color = "red";
+        statusSpan.textContent = `Error: ${data.detail}`;
+      }
+    });
+    {% endif %}
+  </script>
+
+{% else %}
+
+  <h1>You are not allowed to enter this chat room</h1>
+
+{% endif %}
+
+</body>
+</html>
